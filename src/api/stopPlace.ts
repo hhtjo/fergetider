@@ -4,23 +4,28 @@ interface StopPlaceQuery {
   stopPlace: {
     longitude: number;
     latitude: number;
+    id: string;
     name: string;
     transportMode: Array<string>;
-    estimatedCalls: Array<{
-      aimedArrivalTime: string;
-      aimedDepartureTime: string;
-      destinationDisplay: {
-        frontText: string;
-        via: Array<string>;
-      };
-      serviceJourney: {
-        quays: Array<{
-          stopPlace: {
-            name: string;
-            id: string;
-          };
-        }>;
-      };
+    estimatedCalls: EstimatedCall[];
+  };
+}
+
+export interface StopPlace {
+  id: string;
+  name: string;
+}
+
+export interface EstimatedCall {
+  aimedArrivalTime: string;
+  aimedDepartureTime: string;
+  destinationDisplay: {
+    frontText: string;
+    via: Array<string>;
+  };
+  serviceJourney: {
+    quays: Array<{
+      stopPlace: StopPlace;
     }>;
   };
 }
@@ -31,6 +36,7 @@ const stopPlaceQuery = gql`
       longitude
       latitude
       name
+      id
       transportMode
       estimatedCalls(
         arrivalDeparture: departures

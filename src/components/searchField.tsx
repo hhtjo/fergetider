@@ -5,10 +5,16 @@ import useDebounced from "../hooks/useDebounced";
 
 export const SearchField = ({
   onSelect,
+  label,
+  value,
+  disabled = false,
 }: {
-  onSelect?: (id: string) => void;
+  onSelect?: (id?: string) => void;
+  label: string;
+  value?: string;
+  disabled?: boolean;
 }) => {
-  const [text, setText] = useState("");
+  const [text, setText] = useState(value ?? "");
   const debouncedText = useDebounced(text, 500);
   const [isDirty, setIsDirty] = useState(false);
 
@@ -26,19 +32,36 @@ export const SearchField = ({
 
   function onInput(txt: string) {
     setText(txt);
-    setIsDirty(true);
+    setIsDirty(!!txt.length);
+  }
+
+  function onClear() {
+    onInput("");
+    onSelect?.(undefined);
   }
 
   return (
-    <div className="p-5">
-      <input
-        className="border border-gray-400 p-2 bg-white w-full"
-        onInput={(e) => onInput(e.currentTarget.value)}
-        placeholder="Søk"
-        value={text}
-      />
+    <p className="relative w-full justify-between bg-slate-100 text-slate-500 rounded border focus-within:border-blue-500">
+      <label className="p-2">{label}</label>
+      <div className="text-2xl font-semibold flex justify-between text-gray-800 relative">
+        <input
+          className="p-2 w-full bg-transparent outline-none border-none"
+          onInput={(e) => onInput(e.currentTarget.value)}
+          placeholder="Søk"
+          value={text}
+          disabled={disabled}
+        />
+        {!!text.length && (
+          <button
+            className="text-lg text-gray-500 hover:text-gray-800 font-medium px-1 pr-4"
+            onClick={onClear}
+          >
+            X
+          </button>
+        )}
+      </div>
       {isDirty && (
-        <ul className="border border-t-0 border-gray-400 bg-gray-50">
+        <ul className="mt-[1px] absolute w-full max-w-full border border-t-0 border-gray-400 bg-gray-50 top-full">
           {query.data?.features.map((res) => (
             <li
               className="p-2 w-full border-b hover:bg-blue-50 cursor-pointer"
@@ -50,6 +73,6 @@ export const SearchField = ({
           ))}
         </ul>
       )}
-    </div>
+    </p>
   );
 };

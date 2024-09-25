@@ -28,7 +28,7 @@ export async function getAutocomplete(query: string) {
   if(!query){
     return null
   }
-  const url = `https://api.entur.io/geocoder/v1/autocomplete?lang=no&text=${query}&categories=harbourPort`;
+  const url = `https://api.entur.io/geocoder/v1/autocomplete?lang=no&text=${query}&categories=harbourPort,ferryStop`;
   const response = await fetch(url);
 
   return await response.json() as GeocoderAutocomplete
