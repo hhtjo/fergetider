@@ -1,5 +1,5 @@
 interface GeocoderAutocomplete {
-  features: GeocoderFeature[]
+  features: GeocoderFeature[];
 }
 
 export interface GeocoderFeature {
@@ -25,11 +25,11 @@ export interface GeocoderFeature {
 }
 
 export async function getAutocomplete(query: string) {
-  if(!query){
-    return null
+  if (!query) {
+    return null;
   }
-  const url = `https://api.entur.io/geocoder/v1/autocomplete?lang=no&text=${query}&categories=harbourPort,ferryStop`;
+  const url = `https://api.entur.io/geocoder/v1/autocomplete?lang=no&categories=harbourPort,ferryStop&size=5&text=${query}`;
   const response = await fetch(url);
 
-  return await response.json() as GeocoderAutocomplete
+  return (await response.json()) as GeocoderAutocomplete;
 }

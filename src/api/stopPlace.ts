@@ -1,6 +1,6 @@
 import request, { gql } from "graphql-request";
 
-interface StopPlaceQuery {
+export interface StopPlaceQuery {
   stopPlace: {
     longitude: number;
     latitude: number;
@@ -71,6 +71,6 @@ export async function getAllDepartures(stopId: string) {
     stopPlaceQuery,
     {
       stopPlace: stopId,
-    }
+    },
   );
 }

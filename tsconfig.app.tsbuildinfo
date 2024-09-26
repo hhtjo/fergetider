@@ -1,0 +1,1 @@
+{"root":["./src/App.tsx","./src/main.tsx","./src/vite-env.d.ts","./src/api/geolocate.ts","./src/api/stopPlace.ts","./src/components/DestinationSelector.tsx","./src/components/FerrySchedule.tsx","./src/components/Loader.tsx","./src/components/ScheduleSelector.tsx","./src/components/schedule.tsx","./src/components/searchField.tsx","./src/hooks/useDebounced.ts"],"version":"5.6.2"}

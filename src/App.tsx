@@ -5,14 +5,13 @@ const rootqueryClient = new QueryClient();
 
 function App() {
   return (
-    <div className="bg-sky-700 p-5 min-h-screen">
-      <QueryClientProvider client={rootqueryClient}>
-        <div className="max-w-lg mx-auto bg-blue-100 rounded">
-          <h1 className="p-4 text-3xl font-semibold text-center">Fergetider</h1>
+    <QueryClientProvider client={rootqueryClient}>
+      <div className="min:h-screen h-screen bg-sky-700 md:p-16">
+        <div className="mx-auto h-full max-w-md overflow-y-auto bg-blue-100 sm:rounded-md sm:shadow-lg">
           <FerrySchedule />
         </div>
-      </QueryClientProvider>
-    </div>
+      </div>
+    </QueryClientProvider>
   );
 }
 
