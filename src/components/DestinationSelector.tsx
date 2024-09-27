@@ -17,7 +17,7 @@ export const DestinationSelector = ({
         {Object.values(destinations).map((d) => (
           <li key={d.id}>
             <button
-              className="w-full rounded border-2 border-slate-300 bg-white p-4 text-left text-xl font-semibold hover:bg-gray-100"
+              className="w-full rounded-md border border-slate-300 bg-slate-100 p-4 text-left text-xl hover:bg-slate-200 active:border-sky-800"
               onClick={() => onSelect(d.id)}
             >
               {d.name}

@@ -78,7 +78,7 @@ export const FerrySchedule = () => {
 
   return (
     <div className="flex h-full flex-col">
-      <h1 className="p-4 text-center text-3xl font-semibold">Fergetider</h1>
+      <h1 className="px-4 pt-8 pb-0 text-center text-3xl font-semibold">Fergetider</h1>
       <ScheduleContext.Provider value={scheduleContext}>
         {(currentPage === "schedule_select" || showSchedule) && (
           <ScheduleSelector

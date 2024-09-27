@@ -24,7 +24,7 @@ export const Schedule = ({
 }) => {
   return (
     <>
-      <div className="mt-8 overflow-y-auto">
+      <div className="overflow-y-auto">
         <table className="relative w-full table-fixed">
           <thead>
             <tr className="order-b-2 sticky top-0 bg-blue-300 font-medium uppercase">
@@ -36,7 +36,7 @@ export const Schedule = ({
               </td>
             </tr>
           </thead>
-          <tbody>
+          <tbody className="[&>*:nth-child(even)]:bg-slate-50">
             {schedule?.map((ec, i) => (
               <ScheduleRow estimatedCall={ec} key={i} />
             ))}
@@ -57,8 +57,8 @@ const ScheduleRow = ({
 }: {
   estimatedCall: EstimatedCall;
 }) => (
-  <tr className="border-b bg-white">
-    <td className="flex px-6 py-3 font-mono text-3xl font-medium">
+  <tr className="bg-white">
+    <td className="flex px-6 py-3 font-mono text-2xl font-medium">
       {DateTime.fromISO(ec.aimedDepartureTime).toFormat("HH:mm")}
       {diffDays(ec.aimedDepartureTime) > 0 && (
         <span className="px-1 text-sm text-gray-400">
@@ -66,7 +66,7 @@ const ScheduleRow = ({
         </span>
       )}
     </td>
-    <td align="right" className="px-6 py-1 text-xl font-medium">
+    <td align="right" className="px-6 py-1 text-lg">
       {timeUntil(ec.aimedDepartureTime)}
     </td>
   </tr>

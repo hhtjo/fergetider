@@ -45,7 +45,7 @@ export const ScheduleSelector = ({
   );
 
   return (
-    <div className="space-y-4 p-4">
+    <div className="space-y-4 px-4 py-8">
       {fromSelector}
       {toSelector}
     </div>
