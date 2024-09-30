@@ -3,7 +3,7 @@ import { StopPlace } from "../api/stopPlace";
 import { DestinationSelector } from "./DestinationSelector";
 import { Loader } from "./Loader";
 import { SearchField } from "./searchField";
-import { ScheduleContext } from "./FerrySchedule";
+import { ScheduleContext } from "../contexts/ScheduleContext";
 
 export const ScheduleSelector = ({
   onStopSelect,
@@ -16,26 +16,26 @@ export const ScheduleSelector = ({
   loading: boolean;
   destinations?: Record<string, StopPlace>;
 }) => {
-  const schedule = useContext(ScheduleContext);
+  const { departureStop, destinationStop}= useContext(ScheduleContext);
 
   const fromSelector = (
     <SearchField
       label="Fra:"
-      value={schedule?.departureStop?.name}
+      value={departureStop?.name}
       onSelect={onStopSelect}
     />
   );
 
-  const toSelector = schedule?.destinationStop?.name ? (
+  const toSelector = destinationStop?.name ? (
     <SearchField
       label="Til:"
-      value={schedule?.destinationStop?.name}
+      value={destinationStop?.name}
       disabled
       onSelect={onDestinationSelect}
     />
   ) : loading ? (
     <Loader />
-  ) : schedule?.departureStop ? (
+  ) :departureStop ? (
     <DestinationSelector
       onSelect={onDestinationSelect}
       destinations={destinations ?? {}}

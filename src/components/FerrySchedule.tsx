@@ -1,28 +1,30 @@
-import { createContext, useEffect, useMemo, useState } from "react";
+import { useContext, useEffect, useMemo, useState } from "react";
 import { Schedule } from "./schedule";
 import { ScheduleSelector } from "./ScheduleSelector";
-import { EstimatedCall, getAllDepartures, StopPlace } from "../api/stopPlace";
+import { getAllDepartures, StopPlace } from "../api/stopPlace";
 import { useQuery } from "@tanstack/react-query";
-
-interface ScheduleContextType {
-  departureStop?: StopPlace;
-  destinationStop?: StopPlace;
-  estimatedCalls?: EstimatedCall[];
-}
-
-export const ScheduleContext = createContext<ScheduleContextType | null>(null);
+import { ScheduleContext } from "../contexts/ScheduleContext";
 
 export const FerrySchedule = () => {
-  const [currentPage, setCurrentPage] = useState("schedule_select");
-  const [selectedStop, setSelectedStop] = useState<string | undefined>();
-  const [scheduleContext, setScheduleContext] =
-    useState<ScheduleContextType | null>(null);
+  const {
+    departureStop,
+    destinationStop,
+    setDepartureStop,
+    setDestinationStop,
+  } = useContext(ScheduleContext);
+  const [selectedStop, setSelectedStop] = useState<string | undefined>(
+    departureStop?.id,
+  );
   const stopPlaces: Record<string, StopPlace> = {};
 
   function onStopSelect(stop?: string) {
     onDestinationSelect(undefined);
     setSelectedStop(stop);
   }
+
+  useEffect(() => {
+    setSelectedStop(departureStop?.id);
+  }, [departureStop]);
 
   const query = useQuery({
     queryKey: ["schedule", selectedStop],
@@ -44,57 +46,45 @@ export const FerrySchedule = () => {
     if (destination == "") {
       destination = undefined;
     }
-    setScheduleContext((v) => ({
-      ...v,
-      destinationStop: stopPlaces[destination ?? ""],
-    }));
-    setCurrentPage(
-      destination && selectedStop ? "show_schedule" : "schedule_select",
-    );
+    setDestinationStop(stopPlaces[destination ?? ""]);
   }
 
   const stopPlace = query.data?.stopPlace;
 
   useEffect(() => {
-    setScheduleContext((v) => ({
-      ...v,
-      departureStop: stopPlace,
-    }));
-  }, [stopPlace]);
+    if (stopPlace) {
+      setDepartureStop({ id: stopPlace.id, name: stopPlace.name });
+    }
+  }, [stopPlace, setDepartureStop]);
 
-  const showSchedule =
-    currentPage == "show_schedule" &&
-    !!stopPlace &&
-    !!scheduleContext?.destinationStop;
+  const showSchedule = !!stopPlace && !!destinationStop;
 
   const filteredTimes = useMemo(() => {
     return query.data?.stopPlace.estimatedCalls.filter((ec) => {
       return (
         ec.serviceJourney.quays[ec.serviceJourney.quays.length - 1].stopPlace
-          .id === scheduleContext?.destinationStop?.id
+          .id === destinationStop?.id
       );
     });
-  }, [scheduleContext?.destinationStop?.id, query.data]);
+  }, [destinationStop?.id, query]);
 
   return (
     <div className="flex h-full flex-col">
-      <h1 className="px-4 pt-8 pb-0 text-center text-3xl font-semibold">Fergetider</h1>
-      <ScheduleContext.Provider value={scheduleContext}>
-        {(currentPage === "schedule_select" || showSchedule) && (
-          <ScheduleSelector
-            onStopSelect={onStopSelect}
-            destinations={stopPlaces}
-            onDestinationSelect={onDestinationSelect}
-            loading={query.isLoading}
-          />
-        )}
-        {showSchedule && (
-          <Schedule
-            schedule={filteredTimes ?? []}
-            updatedAt={query.dataUpdatedAt}
-          />
-        )}
-      </ScheduleContext.Provider>
+      <h1 className="px-4 pb-0 pt-8 text-center text-3xl font-semibold">
+        Fergetider
+      </h1>
+      <ScheduleSelector
+        onStopSelect={onStopSelect}
+        destinations={stopPlaces}
+        onDestinationSelect={onDestinationSelect}
+        loading={query.isLoading}
+      />
+      {showSchedule && (
+        <Schedule
+          schedule={filteredTimes ?? []}
+          updatedAt={query.dataUpdatedAt}
+        />
+      )}
     </div>
   );
 };
